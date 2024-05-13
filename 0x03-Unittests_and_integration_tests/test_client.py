@@ -21,4 +21,5 @@ class TestGithubOrgClient(unittest.TestCase):
         """Parameterize and patch org function"""
         client = GithubOrgClient(org_name)
         self.assertEqual(client.org, {"payload": True})
-        mock_get_json.assert_called_once()
+        url = f"https://api.github.com/orgs/{org_name}"
+        mock_get_json.assert_called_once_with(url)
