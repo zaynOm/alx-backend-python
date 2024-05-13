@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Tests for GithubOrgClient"""
 
-from typing import Any, Dict
 import unittest
 from unittest.mock import Mock, PropertyMock, patch
 from parameterized import parameterized
@@ -40,7 +39,7 @@ class TestGithubOrgClient(unittest.TestCase):
         return_value=[{"name": "repo1"}, {"name": "repo2"}],
     )
     def test_public_repos(self, mock_get_jdon: Mock) -> None:
-        """More patching"""
+        """Test public_repos function"""
         with patch(
             "client.GithubOrgClient._public_repos_url",
             new_callable=PropertyMock,
@@ -51,13 +50,11 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_get_jdon.assert_called_once()
             mock_pru.assert_called_once()
 
-    @parameterized.expand(
-        [
+    @parameterized.expand([
             ({"license": {"key": "my_license"}}, "my_license", True),
             ({"license": {"key": "other_license"}}, "my_license", False),
-        ]
-    )
-    def test_has_license(self, repo, license_key, expected):
-        """Parameterize"""
+    ])
+    def test_has_license(self, repo, license_key, expected) -> None:
+        """Test has_license function"""
         client = GithubOrgClient("abc")
         self.assertEqual(client.has_license(repo, license_key), expected)
