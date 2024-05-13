@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Tests for GithubOrgClient"""
 
+from typing import Any, Dict
 import unittest
 from unittest.mock import Mock, PropertyMock, patch
 from parameterized import parameterized
@@ -49,3 +50,17 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(client.public_repos(), ["repo1", "repo2"])
             mock_get_jdon.assert_called_once()
             mock_pru.assert_called_once()
+
+    @parameterized.expand(
+        [
+            ({"license": {"key": "my_license"}}, "my_license", True),
+            ({"license": {"key": "other_license"}}, "my_license", False),
+        ]
+    )
+    def test_has_license(
+        self, repo: Dict[str, Dict], license_key: str, expected: Any
+    ) -> None:
+        """Parameterize"""
+        self.assertEqual(
+            GithubOrgClient.has_license(repo, license_key), expected
+        )
