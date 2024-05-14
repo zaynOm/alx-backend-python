@@ -4,6 +4,7 @@
 import unittest
 from unittest.mock import Mock, PropertyMock, patch
 from parameterized import parameterized, parameterized_class
+from requests.models import HTTPError
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 
@@ -79,18 +80,14 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         def mock_requests_get(url):
             """Some side effects"""
 
-            class MockResponse:
-                def __init__(self, json_data):
-                    self.json_data = json_data
+            payloads = {
+                "https://api.github.com/orgs/google": cls.org_payload,
+                "https://api.github.com/orgs/google/repos": cls.repos_payload,
+            }
 
-                def json(self):
-                    return self.json_data
-
-            if url.endswith("/orgs/google"):
-                return MockResponse(cls.org_payload)
-            elif url.endswith("/orgs/google/repos"):
-                return MockResponse(cls.repos_payload)
-            return None
+            if url in payloads:
+                return Mock(**{"json.return_value": payloads[url]})
+            return HTTPError
 
         cls.mock_get.side_effect = mock_requests_get
 
