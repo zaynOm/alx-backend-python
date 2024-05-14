@@ -65,12 +65,14 @@ class TestGithubOrgClient(unittest.TestCase):
 
 
 @parameterized_class(
-    {
-        "org_payload": TEST_PAYLOAD[0][0],
-        "repos_payload": TEST_PAYLOAD[0][1],
-        "expected_repos": TEST_PAYLOAD[0][2],
-        "apache2_repos": TEST_PAYLOAD[0][3],
-    }
+    [
+        {
+            "org_payload": TEST_PAYLOAD[0][0],
+            "repos_payload": TEST_PAYLOAD[0][1],
+            "expected_repos": TEST_PAYLOAD[0][2],
+            "apache2_repos": TEST_PAYLOAD[0][3],
+        }
+    ]
 )
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient"""
@@ -78,8 +80,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """SetUpClass method"""
-        cls.patcher = patch("requests.get")
-        cls.mock_get = cls.patcher.start()
 
         def mock_requests_get(url):
             """Some side effects"""
@@ -93,7 +93,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
                 return Mock(**{"json.return_value": payloads[url]})
             return HTTPError
 
-        cls.mock_get.side_effect = mock_requests_get
+        cls.patcher = patch("requests.get", side_effect=mock_requests_get)
+        cls.mock_get = cls.patcher.start()
 
     @classmethod
     def tearDownClass(cls):
