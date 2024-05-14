@@ -94,12 +94,12 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             return HTTPError
 
         cls.get_patcher = patch("requests.get", side_effect=mock_requests_get)
-        cls.mock_get = cls.patcher.start()
+        cls.mock_get = cls.get_patcher.start()
 
     @classmethod
     def tearDownClass(cls):
         """TearDownClass method"""
-        cls.patcher.stop()
+        cls.get_patcher.stop()
 
     def test_public_repos(self):
         """Test public_repos"""
