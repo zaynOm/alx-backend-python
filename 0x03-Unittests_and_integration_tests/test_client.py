@@ -68,7 +68,7 @@ class TestGithubOrgClient(unittest.TestCase):
     TEST_PAYLOAD,
 )
 class TestIntegrationGithubOrgClient(unittest.TestCase):
-    """"""
+    """Integration tests for GithubOrgClient"""
 
     @classmethod
     def setUpClass(cls):
@@ -100,12 +100,12 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         cls.patcher.stop()
 
     def test_public_repos(self):
-        """doc doc doc"""
+        """Test public_repos"""
         github_org_client = GithubOrgClient("google")
         self.assertEqual(github_org_client.public_repos(), self.expected_repos)
 
     def test_public_repos_with_license(self):
-        """doc doc doc"""
+        """Test public_repos apache-2.0 license"""
         github_org_client = GithubOrgClient("google")
         self.assertEqual(
             github_org_client.public_repos(license="apache-2.0"),
